@@ -220,6 +220,9 @@ body:has(#ibar:not([hidden])) .wrap{padding-bottom:130px}
 .exprog{display:flex;align-items:center;gap:10px;margin:8px 0;font-size:.88rem;font-weight:700;white-space:nowrap}
 .exprog i{flex:1;height:8px;border-radius:4px;background:var(--empty);overflow:hidden} .exprog i b{display:block;height:100%;background:var(--accent);border-radius:4px;float:right}
 .exq{border-top:1px solid var(--line);padding-top:8px}
+.pgame{background:var(--surface);border:2px solid var(--accent);border-radius:16px;padding:10px 14px;margin-top:10px}
+.pgame b{font-family:var(--f-display);font-size:1.25rem;color:var(--accent)} .pgame p{margin:4px 0 0;font-size:1rem;line-height:1.7}
+.wrap.practicing #lead{display:none}
 .exq b{font-size:1.05rem} .exq p{margin:4px 0 0;font-size:1rem;line-height:1.7}
 .exnext{position:fixed;left:12px;right:12px;bottom:12px;max-width:596px;margin-inline:auto;z-index:9;display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--surface);border:2px solid var(--accent);border-radius:14px;box-shadow:0 6px 24px rgba(0,0,0,.2);padding:10px 14px;font-weight:700}
 .exnext span{flex:1} .exnext .start{width:auto;padding:8px 22px;margin:0} .exnext .ghost{width:auto;padding:8px 14px;margin:0}
@@ -336,14 +339,23 @@ details p{margin:.4em 0}
 .chips.sur{grid-template-columns:repeat(auto-fill,minmax(84px,1fr));max-height:220px;overflow-y:auto}
 .plab2{margin:6px 0 4px;font-size:.85rem;font-weight:700;color:var(--muted)} .plab2 small{font-weight:400}
 /* «تدرّب»: one question per screen (flow.js) */
-#pick.wiz{gap:12px}
-#pick.wiz #pickTitle{font-size:1.5rem}
-#pick.wiz .pstep{display:none} #pick.wiz .pstep.pmode{display:flex} #pick.wiz .pmode > .plab{display:none}
-#pick.wiz .wlist, #pick.wiz .wres, #pick.wiz .pick-foot, #pick.wiz #pickGo{display:none}
-#pick[data-step="1"] .pmode{display:none!important} #pick[data-step="1"] .wlist{display:flex}
-#pick[data-step="2"] #pickJuz{display:none!important}
-#pick[data-step="3"] .pmode > .tabs{display:none} #pick[data-step="3"] .pick-foot{display:flex} #pick[data-step="3"] #pickGo{display:block}
-#pick[data-step="0"] .pmode{display:none!important} #pick[data-step="0"] .wres{display:flex}
+#pick.wz{gap:12px}
+#pick.wz #pickTitle{font-size:1.5rem}
+#pick.wz > .pstep, #pick.wz > .pick-foot, #pick.wz #pickGo{display:none!important}
+#pick.wz .pick-go{grid-template-columns:1fr}
+.wz-box{display:flex;flex-direction:column;gap:12px}
+.wz-box > .wres, .wz-box > .wlist{display:none}
+#pick[data-step="0"] #wRes{display:flex}
+#pick[data-step="1"]:not([data-sub="juz"]):not([data-sub="sur"]) #wSrc{display:flex}
+#pick[data-step="1"][data-sub="juz"] #wParts, #pick[data-step="1"][data-sub="sur"] #wParts{display:flex}
+#pick[data-step="2"] #wWhat{display:flex}
+#wGroups{display:flex;flex-direction:column;gap:8px} .wz-box [hidden]{display:none!important}
+.wopt.one{justify-content:flex-start;min-height:56px} .wopt.one b{font-size:1.2rem}
+#pick[data-sub="sur"] #wSur{max-height:min(55vh,440px)}
+#wGroups .wopt{min-height:64px} #wGroups .wopt b{font-size:1.25rem}
+.wopt:disabled{background:var(--bg);border:1.5px dashed var(--line);color:var(--muted);cursor:not-allowed;box-shadow:none}
+.wopt:disabled{opacity:1} .wopt:disabled b{color:var(--muted)!important;opacity:.7} .wopt:disabled .wck{visibility:hidden} .wopt:disabled small{color:var(--ink);font-weight:600}
+.wopt small{line-height:1.5}
 .whead{display:flex;flex-direction:column;gap:2px;margin-top:-6px} .whead p{margin:0} .wstep{font-size:.85rem;color:var(--muted);font-weight:600} .wsub{font-weight:700;color:var(--accent)}
 .wstep:empty, .wsub:empty{display:none}
 .wlist{flex-direction:column;gap:8px}
@@ -1241,13 +1253,13 @@ $('juzChips').innerHTML = Array.from({length: 30}, (_, i) =>
 function surahsIn(){ let n = 0; for (let s = 1; s <= 114; s++) { if (pick.surahs.includes(s)) { n++; continue; } for (let j = SURAH_JUZ[s - 1]; j <= SURAH_JUZ_END[s - 1]; j++) if (pick.juz.includes(j)) { n++; break; } } return n; }
 function pool(){
   if (pick.mode === 'miss') { const m = new Set(store.get(MISS_KEY, [])); return DATA.p.map((p, i) => m.has(p[0]) ? i : -1).filter(i => i >= 0); }
-  const SIN = surahsIn(), out = [];
+  const SIN = surCount(), out = [];   // surahs in the choice, not counting al-Fatiha
   DATA.p.forEach((p, i) => {
-    // at least two surahs with a place inside the chosen juz (the other places are shown at the end), and at least
-    // three other surahs in those juz to rule out, or the answer would be obvious (juz ١–٣ hold only 3 surahs)
+    // at least two surahs with a place inside the choice (the other places are shown at the end), and at least
+    // four other surahs in the choice to rule out, or the answer would be obvious
     if (pick.mode === 'all') { out.push(i); return; }
     const n = new Set(p[1].filter(sp => memHas(sp[0], juzOf(sp[0], sp[1]))).map(sp => sp[0])).size;
-    if (n >= 2 && SIN >= n + 3) out.push(i);
+    if (n >= 2 && SIN >= n + 4) out.push(i);
   });
   return out;
 }
@@ -1290,7 +1302,7 @@ function renderPick(){
   $('pickCount').textContent = none ? 'اختر الأجزاء أو السور التي تحفظها'
     : n ? ''   // no count of the available tests
     : pick.mode === 'miss' ? 'لا توجد أخطاء محفوظة في هذا الاختبار بعد'
-    : surahsIn() < 6 ? 'هذه الأجزاء فيها سور قليلة، فتكون الإجابة واضحة. أضف أجزاء أخرى، أو تدرّب في «تثبيت الحفظ».'
+    : surCount() < 6 ? 'هذه الأجزاء فيها سور قليلة، فتكون الإجابة واضحة. أضف أجزاء أخرى، أو تدرّب في «تثبيت الحفظ».'
     : 'لا توجد أسئلة لهذه الأجزاء: يلزم أن ترد العبارة في سورتين منها على الأقل. أضف أجزاء أخرى';
   $('pickClear').hidden = pick.mode !== 'juz';
   $('pickGo').disabled = !n;
@@ -1639,7 +1651,8 @@ function setHash(h){
 // practice: the same question again after a refresh (the first practice of a page opened with #train)
 function resumeOr(list, make){
   let r = null, pick;
-  if (!window.__qtResumed) { window.__qtResumed = true; if (WANT_TRAIN) { try { r = JSON.parse(sessionStorage.getItem('qt-prac-' + GAME)); } catch (e) {} } }
+  if (!window.__qtResumed) { window.__qtResumed = true; let fresh = false; try { fresh = !!sessionStorage.getItem('qt-new'); sessionStorage.removeItem('qt-new'); } catch (e) {}   // qt-new: came here for a new question, not a reload
+    if (WANT_TRAIN && !fresh) { try { r = JSON.parse(sessionStorage.getItem('qt-prac-' + GAME)); } catch (e) {} } }
   if (r !== null && (Array.isArray(r) ? r.length && r.every(x => list.includes(x)) : list.includes(r))) pick = r;
   else pick = typeof make === 'function' ? make() : make;
   try { sessionStorage.setItem('qt-prac-' + GAME, JSON.stringify(pick)); } catch (e) {}
@@ -2329,100 +2342,196 @@ $('pickX').addEventListener('click', () => { if (S && S.practice) return; if (IS
   if (h1 && !window.QT_TEACHER) { h1.style.cursor = 'pointer'; h1.setAttribute('role', 'link'); h1.title = 'الرئيسية'; h1.addEventListener('click', () => { location.href = HOME_URL; }); }
 })();
 
-// ---------- «تدرّب»: one question per screen ----------
-// ١ ماذا تريد أن تختبر؟  →  ٢ من أين تأتي الأسئلة؟  →  ٣ (only «ما أحفظه») the juz, with the surahs behind a link.
-// Next time: the last choice in one card, «ابدأ» or «اختيار آخر».
+// ---------- «تدرّب»: two steps ----------
+// ١ من أين تريد الأسئلة؟  (كل القرآن · أجزاء معيّنة · سور معيّنة · أخطائي)
+// ٢ ماذا تريد أن تختبر؟  (المتشابهات · تثبيت الحفظ): a quiz that can't work with the choice of
+//   step 1 is greyed out, with the reason. Next time: the last choice in one card, «ابدأ» or «اختيار آخر».
+// The surahs of a choice, not counting al-Fatiha: «المتشابهات» needs 6 (and per «أين ورد؟» question: its surahs + 4).
+const WZ_SJ = [1,1,3,4,6,7,8,9,10,11,11,12,13,13,14,14,15,15,16,16,17,17,18,18,18,19,19,20,20,21,21,21,21,22,22,22,23,23,23,24,24,25,25,25,25,26,26,26,26,26,26,27,27,27,27,27,27,28,28,28,28,28,28,28,28,28,29,29,29,29,29,29,29,29,29,29,29,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30];
+const WZ_SJE = [1,3,4,6,7,8,9,10,11,11,12,13,13,13,14,14,15,16,16,16,17,17,18,18,19,19,20,20,21,21,21,21,22,22,22,23,23,23,24,24,25,25,25,25,25,26,26,26,26,26,27,27,27,27,27,27,27,28,28,28,28,28,28,28,28,28,29,29,29,29,29,29,29,29,29,29,29,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30];
+function surCount(){
+  let n = 0;
+  for (let s = 2; s <= 114; s++) {
+    if (pick.surahs.includes(s)) { n++; continue; }
+    for (let j = WZ_SJ[s - 1]; j <= WZ_SJE[s - 1]; j++) if (pick.juz.includes(j)) { n++; break; }
+  }
+  return n;
+}
+// a short name for the chosen quizzes: a whole group by its name («المتشابهات»، «تثبيت الحفظ»)
+function wzLabel(list){
+  const l = list.map(g => ['wasat', 'akhir'].includes(g) ? 'awwal' : g), out = [];
+  [['المتشابهات', ['surah', 'farq']], ['تثبيت الحفظ', ['awwal', 'qabl', 'rattib']]].forEach(([name, gs]) => {
+    if (gs.every(g => l.includes(g))) out.push(name);
+    else gs.filter(g => l.includes(g)).forEach(g => out.push(g === 'awwal' ? 'أكمل الآيات' : quizName(g)));
+  });
+  return out.join('، ');
+}
+const WZ_NEED = { surah: 6, farq: 6 };   // «المتشابهات»: 6 surahs at least (not counting al-Fatiha), both quizzes alike
+const WZ_MISS = { surah: ['mut-miss'], farq: ['farq-miss'], awwal: ['awwal-miss', 'wasat-miss', 'akhir-miss'], qabl: ['qabl3-miss'], rattib: ['rattib2-miss'] };
+// '' = the quiz works with this choice, otherwise the reason it doesn't
+// a verse range of one surah is in the choice when the surah is chosen, or every juz it spans is (WZ_IDX: wz_index.js)
+const wzIn = (s, j1, j2) => { if (pick.surahs.includes(s)) return true; for (let j = j1; j <= j2; j++) if (!pick.juz.includes(j)) return false; return true; };
+function wzFits(g){
+  if (g === 'farq') return WZ_IDX.farq.some(([s1, j1, s2, j2]) => wzIn(s1, j1, j1) && wzIn(s2, j2, j2));
+  return !WZ_IDX[g] || WZ_IDX[g].some(([s, j1, j2]) => wzIn(s, j1, j2));
+}
+function wzWhy(g){
+  if (pick.mode === 'miss') return WZ_MISS[g].some(k => (store.get(k, []) || []).length) ? '' : 'لا توجد أخطاء محفوظة بعد';
+  if (pick.mode !== 'juz') return '';
+  if (WZ_NEED[g] && surCount() < WZ_NEED[g]) return 'يحتاج ' + toAr(WZ_NEED[g]) + ' سور على الأقل غير الفاتحة';
+  return wzFits(g) ? '' : 'لا توجد أسئلة فيما اخترته';
+}
 (() => {
   const P = $('pick'); if (!P) return;
-  const QUIZ = [['surah', 'أين ورد؟', 'اذكر السور التي ورد فيها الموضع'], ['farq', 'ميّز بينهما', 'موضعان متشابهان: اذكر سورة كل منهما'],
-    ['awwal', 'أكمل الآيات', 'اذكر الكلمات التي تكمل الآيات التالية'], ['qabl', 'ما قبلها؟ ما بعدها؟', 'اذكر الآية التي قبلها والتي بعدها'], ['rattib', 'رتّب الآيات', 'رتّب الآيات المتتالية']];
-  const IN = g => QUIZ.some(q => q[0] === (['wasat', 'akhir'].includes(g) ? 'awwal' : g));
-  P.classList.add('wiz');
-  const modeStep = P.querySelector('.tab[data-mode]').closest('.pstep'); modeStep.classList.add('pmode');
-  const head = document.createElement('div'); head.className = 'whead';
-  head.innerHTML = '<p class="wstep" id="wStep"></p><p class="wsub" id="wSub"></p>';
-  $('pickTitle').after(head);
-  const list = document.createElement('div'); list.className = 'wlist'; list.id = 'wQuiz';
-  // one or more quizzes (practice then moves from one to the next)
-  list.innerHTML = '<p class="wnote">اختر اختبارًا أو أكثر</p>' + QUIZ.map(([g, n, d]) => `<button type="button" class="wopt" data-g="${g}" aria-pressed="false"><span class="wck" aria-hidden="true"></span><span class="wtx"><b>${n}</b><small>${d}</small></span></button>`).join('')
-    + '<button type="button" class="start" id="wNext" disabled>التالي</button>';
-  head.after(list);
-  let sel = [];
-  const paintSel = () => { list.querySelectorAll('.wopt').forEach(b => { const on = sel.includes(b.dataset.g); b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); }); $('wNext').disabled = !sel.length; };
-  const res = document.createElement('div'); res.className = 'wres'; res.id = 'wRes'; head.after(res);
-  // the surahs only when asked for (or already chosen)
-  const surLab = $('surChips').previousElementSibling, surBtn = document.createElement('button');
-  surBtn.type = 'button'; surBtn.className = 'link wsur'; surBtn.textContent = 'اختر سورًا بعينها ›';
-  surLab.before(surBtn);
-  const surShow = on => { surLab.hidden = !on; $('surChips').hidden = !on; surBtn.hidden = on; };
-  surBtn.onclick = () => surShow(true);
-  let step = 1;
-  const nameOf = g => QUIZ.find(q => q[0] === (['wasat', 'akhir'].includes(g) ? 'awwal' : g))[1];
-  const gamesLabel = () => (pick.games && pick.games.length ? pick.games : [pick.game]).filter(IN).map(nameOf).join('، ');
-  const TITLE = { 1: 'ماذا تريد أن تختبر؟', 2: 'من أين تأتي الأسئلة؟', 3: 'اختر الأجزاء التي تحفظها', 0: 'تدرّب' };
+  const QUIZ = [['surah', 'أين ورد؟'], ['farq', 'ميّز بينهما'], ['awwal', 'أكمل الآيات'], ['qabl', 'ما قبلها؟ ما بعدها؟'], ['rattib', 'رتّب الآيات']];
+  const GROUPS = [['mut', 'المتشابهات', ['surah', 'farq']], ['hifz', 'تثبيت الحفظ', ['awwal', 'qabl', 'rattib']]];
+  const TAB = g => ['wasat', 'akhir'].includes(g) ? 'awwal' : g;
+  const IN = g => QUIZ.some(q => q[0] === TAB(g));
+  const nameOf = g => QUIZ.find(q => q[0] === TAB(g))[1];
+  const ok = g => !wzWhy(g);
+  P.classList.add('wz');
+  const box = document.createElement('div'); box.className = 'wz-box';
+  box.innerHTML = `<div class="whead"><p class="wstep" id="wStep"></p></div>
+    <div class="wres" id="wRes"></div>
+    <p class="wnote wempty" id="wEmpty" hidden>لا توجد أسئلة فيما اخترته، فاختر غيره</p>
+    <div class="wlist" id="wSrc">
+      <button type="button" class="wopt one" data-src="all"><span class="wtx"><b>كل القرآن</b></span></button>
+      <button type="button" class="wopt one" data-src="juz"><span class="wtx"><b>أجزاء معيّنة</b><small>اختر الأجزاء التي تحفظها</small></span></button>
+      <button type="button" class="wopt one" data-src="sur"><span class="wtx"><b>سور معيّنة</b><small>اختر السور التي تحفظها</small></span></button>
+      <button type="button" class="wopt one" data-src="miss"><span class="wtx"><b>أخطائي</b><small>أعد الأسئلة التي أخطأت فيها من قبل</small></span></button>
+    </div>
+    <div class="wlist" id="wParts">
+      <p class="wnote" id="wPartsNote"></p>
+      <div class="chips juz" id="wJuz">${Array.from({length: 30}, (_, i) => `<label class="opt"><input type="checkbox" value="${i + 1}"><span>${toAr(i + 1)}</span></label>`).join('')}</div>
+      <div class="chips sur" id="wSur">${Array.from({length: 114}, (_, i) => `<label class="opt"><input type="checkbox" value="${i + 1}"><span>${SURAH[i + 1]}</span></label>`).join('')}</div>
+      <button type="button" class="start" id="wPartsNext" disabled>التالي</button>
+    </div>
+    <div class="wlist" id="wWhat">
+      <div id="wGroups"></div>
+      <button type="button" class="start" id="wStart" disabled>ابدأ</button>
+    </div>`;
+  $('pickTitle').after(box);
+  let step = 1, sub = '', each = false, selG = [], sel = [];
+  const TITLE = { 0: 'تدرّب', 1: 'من أين تريد الأسئلة؟', 2: 'ماذا تريد أن تختبر؟' };
+  const games = () => each ? QUIZ.map(q => q[0]).filter(g => sel.includes(g) && ok(g))
+    : GROUPS.filter(([id]) => selG.includes(id)).flatMap(([, , l]) => l.filter(ok));
+  const gamesLabel = () => wzLabel((pick.games && pick.games.length ? pick.games : [pick.game]).filter(IN));
+  // the parts / surahs picker
+  function paintParts(){
+    $('wJuz').querySelectorAll('input').forEach(c => c.checked = pick.juz.includes(+c.value));
+    $('wSur').querySelectorAll('input').forEach(c => c.checked = pick.surahs.includes(+c.value));
+    $('wPartsNext').disabled = sub === 'juz' ? !pick.juz.length : !pick.surahs.length;
+  }
+  function openParts(kind){
+    step = 1; P.dataset.step = 1; $('wStep').textContent = 'الخطوة ١ من ٢';
+    sub = kind; P.dataset.sub = kind;
+    $('pickTitle').textContent = kind === 'juz' ? 'اختر الأجزاء' : 'اختر السور';
+    $('wPartsNote').textContent = kind === 'juz' ? 'اختر جزءًا أو أكثر' : 'اختر سورة أو أكثر';
+    $('wJuz').hidden = kind !== 'juz'; $('wSur').hidden = kind === 'juz';
+    paintParts();
+  }
+    $('wJuz').addEventListener('change', e => { const v = +e.target.value; pick.juz = e.target.checked ? pick.juz.concat(v) : pick.juz.filter(x => x !== v); paintParts(); });
+  $('wSur').addEventListener('change', e => { const v = +e.target.value; pick.surahs = e.target.checked ? pick.surahs.concat(v) : pick.surahs.filter(x => x !== v); paintParts(); });
+  $('wPartsNext').onclick = () => { if (sub === 'sur') pick.juz = []; else pick.surahs = [];   // parts only, or surahs only
+  pick.mode = 'juz'; pick.by = sub; go(2); };
+  $('wSrc').addEventListener('click', e => { const b = e.target.closest('.wopt'); if (!b) return;
+    const s = b.dataset.src;
+    if (s === 'all' || s === 'miss') { pick.mode = s; go(2); } else openParts(s); });
+  // step 2
+  function paintWhat(){
+    $('wGroups').innerHTML = GROUPS.map(([id, name, l]) => {
+      const can = l.filter(ok), why = !can.length ? l.slice().reverse().map(wzWhy).find(Boolean)
+        : id === 'mut' && can.length < l.length && pick.mode === 'juz' ? nameOf(can[0]) + ' فقط — «' + nameOf(l.find(g => !ok(g))) + '» ' + wzWhy(l.find(g => !ok(g))) : '';
+      return `<button type="button" class="wopt${selG.includes(id) && can.length ? ' on' : ''}" data-grp="${id}" aria-pressed="${selG.includes(id) && can.length > 0}"${can.length ? '' : ' disabled'}><span class="wck" aria-hidden="true"></span><span class="wtx"><b>${name}</b>${why ? '<small>' + why + '</small>' : ''}</span></button>`;
+    }).join('');
+    $('wStart').disabled = !games().length;
+  }
+  $('wGroups').addEventListener('click', e => { const b = e.target.closest('.wopt'); if (!b || b.disabled) return;
+    const id = b.dataset.grp; selG = selG.includes(id) ? selG.filter(x => x !== id) : selG.concat(id); paintWhat(); });
+  function start(){
+    const l = games(); if (!l.length) return;
+    pick.games = l; pick.game = l[0] === 'awwal' ? ['awwal', 'wasat', 'akhir'][Math.floor(Math.random() * 3)] : l[0];
+    sessSet([]); store.set('mut-pick', pick);
+    try { sessionStorage.removeItem('qt-skip'); sessionStorage.setItem('qt-new', '1'); } catch (x) {}
+    if (pick.game !== GAME) { location.href = pageOfGame(pick.game) + '#train'; return; }
+    hidePick(); startPractice();
+  }
+  $('wStart').onclick = start;
   function go(n){
-    step = n; P.dataset.step = n;
+    step = n; sub = ''; P.dataset.step = n; P.dataset.sub = '';
+    if (n !== 1) $('wEmpty').hidden = true;
     $('pickTitle').textContent = TITLE[n];
-    $('wStep').textContent = n ? 'الخطوة ' + toAr(n) + ' من ' + toAr(pick.mode === 'juz' || n === 1 ? 3 : 2) : '';
-    $('wSub').textContent = n >= 2 ? gamesLabel() : '';
-    if (n === 1) { sel = (pick.games && pick.games.length ? pick.games : []).filter(g => IN(g)); paintSel(); }
-    if (n === 3) surShow(pick.surahs.length > 0);
+    $('wStep').textContent = n ? 'الخطوة ' + toAr(n) + ' من ٢' : '';
+    if (n === 2) {
+      const saved = (pick.games || []).filter(IN).map(TAB);
+      each = false;   // two choices only: «المتشابهات» and «تثبيت الحفظ» (each = the saved quizzes, for «آخر تدريب»)
+      selG = GROUPS.filter(([, , l]) => l.some(g => ok(g) && saved.includes(g))).map(([id]) => id);
+      paintWhat();
+    }
     if (n === 0) {
-      res.innerHTML = `<p class="wlast">آخر تدريب</p><p class="wwhat"><b>${esc(gamesLabel())}</b> · ${esc(pickLabel())}</p>
+      $('wRes').innerHTML = `<p class="wlast">آخر تدريب</p><p class="wwhat"><b>${esc(gamesLabel())}</b> · ${esc(pickLabel())}</p>
         <button type="button" class="start" id="wGo">ابدأ</button><button type="button" class="ghost" id="wNew">اختيار آخر</button>`;
-      $('wGo').onclick = () => { renderPick(); if (!$('pickGo').disabled) $('pickGo').click(); else go(pick.mode === 'juz' ? 3 : 2); };
+      $('wGo').onclick = () => { const l = (pick.games || []).filter(IN).map(TAB).filter(ok);
+        if (!l.length) { go(1); return; } sel = l; each = true; start(); };
       $('wNew').onclick = () => go(1);
     }
-    if (n === 2 || n === 3) renderPick();
-    if (n === 2) $('pickCount').textContent = '';
     P.scrollIntoView({ block: 'start' });
   }
-  list.addEventListener('click', e => { const b = e.target.closest('.wopt'); if (!b) return;
-    const g = b.dataset.g; sel = sel.includes(g) ? sel.filter(x => x !== g) : QUIZ.map(q => q[0]).filter(x => x === g || sel.includes(x)); paintSel(); });
-  $('wNext').onclick = () => { if (!sel.length) return;
-    pick.games = sel.slice(); pick.game = sel[0] === 'awwal' && ['wasat', 'akhir'].includes(pick.game) ? pick.game : sel[0]; go(2); };
-  modeStep.querySelectorAll('.tab[data-mode]').forEach(t => t.addEventListener('click', () => {
-    if (step !== 2) return;
-    if (t.dataset.mode === 'juz') { go(3); return; }
-    renderPick();
-    if (!$('pickGo').disabled) $('pickGo').click();   // «كل القرآن» / «أخطائي»: straight in
-    else { $('pickCount').textContent = $('pickCount').textContent || 'لا توجد أسئلة هنا بعد'; }
-  }));
-  // «رجوع» goes one step back; on the first screen it closes as before
+  // «رجوع» goes one step back; on the first screen it closes as before (or back to the last choice)
   $('pickX').addEventListener('click', e => {
-    if (step === 3 || (step === 2)) { e.stopImmediatePropagation(); go(step - 1); }
-    else if (step === 1 && store.get('mut-pick', null) && IN(pick.game) && P.dataset.had) { e.stopImmediatePropagation(); go(0); }
+    if (sub) { e.stopImmediatePropagation(); go(1); return; }
+    if (step === 2) { e.stopImmediatePropagation(); if (pick.mode === 'juz') openParts(pick.by === 'sur' ? 'sur' : 'juz'); else go(1); return; }
+    if (step === 1 && P.dataset.had) { e.stopImmediatePropagation(); go(0); }
   }, true);
   let fresh = false;
   $('change').addEventListener('click', () => { fresh = true; }, true);
   const orig = showPick;
   showPick = function(){
     orig();
-    const had = !!store.get('mut-pick', null) && IN(pick.game);
+    const had = !!store.get('mut-pick', null) && (pick.games || []).some(IN);
     P.dataset.had = had ? '1' : '';
-    go(had && !fresh ? 0 : 1); fresh = false;
+    // came back here because the chosen quizzes have no questions in this choice: start the choice again
+    const empty = !fresh && /#(train|pick)/.test(location.hash) && (pick.games || []).map(TAB).includes(TAB(GAME)) && !pool().length;
+    go(had && !fresh && !empty ? 0 : 1); fresh = false;
+    $('wEmpty').hidden = !empty;
   };
 })();
 
-// practice with several quizzes: «اختبار آخر» moves on to the next chosen quiz (on its own page)
+// practice with several quizzes: «التالي» / «اختبار آخر» opens the next chosen quiz, in a fixed turn.
+// «أكمل الآيات» is one quiz in the turn: each time one question from «أول الآية» / «وسط الآية» / «آخر الآية» (equal chance).
+// Inside each quiz the questions don't repeat until all have been asked (bagNext).
 (() => {
   const TAB = g => ['wasat', 'akhir'].includes(g) ? 'awwal' : g;
   const multi = () => Array.isArray(pick.games) && pick.games.length > 1 && pick.games.includes(TAB(GAME));
+  const any = l => l[Math.floor(Math.random() * l.length)];
+  const page = g => g === 'awwal' ? any(['awwal', 'wasat', 'akhir']) : g;
   const nextGame = () => { const l = pick.games, i = l.indexOf(TAB(GAME)); return l[(i + 1) % l.length]; };
-  const moveOn = () => { const g = nextGame(); pick.game = g; store.set('mut-pick', pick); location.href = pageOfGame(g) + '#train'; };
-  $('again').addEventListener('click', e => { if (S && S.practice && multi()) { e.stopImmediatePropagation(); try { sessionStorage.removeItem('qt-skip'); } catch (x) {} moveOn(); } }, true);
-  // a chosen quiz with no questions in the chosen parts: skip it (once round all of them, then the setup)
+  const moveOn = g => { pick.game = g; store.set('mut-pick', pick); try { sessionStorage.setItem('qt-new', '1'); } catch (x) {} location.href = pageOfGame(g) + '#train'; };
+  const clearSkip = () => { try { sessionStorage.removeItem('qt-skip'); } catch (x) {} };
+  $('again').addEventListener('click', e => {
+    if (!(S && S.practice && (multi() || TAB(GAME) === 'awwal'))) return;
+    clearSkip();
+    const g = page(multi() ? nextGame() : TAB(GAME));
+    if (g === GAME) { setTimeout(label, 0); return; }          // the same page: a new question here
+    e.stopImmediatePropagation(); moveOn(g);
+  }, true);
+  // a chosen quiz with no questions in the chosen parts: try another chosen quiz (each once), then the setup
   const origStart = startPractice;
   startPractice = function(){
     if (multi() && !pool().length) {
-      let n = 0; try { n = +sessionStorage.getItem('qt-skip') || 0; sessionStorage.setItem('qt-skip', n + 1); } catch (x) {}
-      if (n < pick.games.length) { moveOn(); return; }
-      try { sessionStorage.removeItem('qt-skip'); } catch (x) {}
-    } else { try { sessionStorage.removeItem('qt-skip'); } catch (x) {} }
+      let tried = []; try { tried = JSON.parse(sessionStorage.getItem('qt-skip')) || []; } catch (x) {}
+      if (!Array.isArray(tried)) tried = [];
+      if (!tried.includes(TAB(GAME))) tried.push(TAB(GAME));
+      const left = pick.games.filter(g => !tried.includes(g));
+      const nx = pick.games.slice(pick.games.indexOf(TAB(GAME)) + 1).concat(pick.games).find(g => left.includes(g));
+      if (nx) { try { sessionStorage.setItem('qt-skip', JSON.stringify(tried)); } catch (x) {} moveOn(page(nx)); return; }
+      clearSkip();
+    } else clearSkip();
     const nx = $('exNext'); if (nx && !FLOW && !HW) nx.hidden = true;
     origStart();
-    if (multi() && $('pwhat')) $('pwhat').textContent = pick.games.map(g => g === 'awwal' ? 'أكمل الآيات' : quizName(g)).join('، ') + ' · ' + pickLabel();
+    label();
   };
+  function label(){ if (multi() && $('pwhat')) $('pwhat').textContent = wzLabel(pick.games) + ' · ' + pickLabel(); }
 })();
 
 // «أظهر الإجابة»: a small link under the answer box in the quizzes where one can get stuck (typing, ordering)
@@ -2439,6 +2548,18 @@ $('pickX').addEventListener('click', () => { if (S && S.practice) return; if (IS
   render = function(){ orig.apply(this, arguments); a.hidden = !S || S.done; };
   a.hidden = !S || S.done;
 })();
+
+// practice: the current quiz's name (and how to answer) above the question
+(() => {
+  const pb = $('pbar'); if (!pb) return;
+  const c = document.createElement('div'); c.id = 'pgame'; c.className = 'pgame'; c.hidden = true; pb.after(c);
+  const paint = () => { const on = !!(S && S.practice && !HW && !FLOW); c.hidden = !on;
+    if (on) c.innerHTML = `<b>${esc(['awwal', 'wasat', 'akhir'].includes(GAME) ? 'أكمل الآيات' : quizName(GAME))}</b>${EXAM_HOW[GAME] ? '<p>' + EXAM_HOW[GAME] + '</p>' : ''}`; };
+  const orig = render; render = function(){ orig.apply(this, arguments); paint(); };
+  paint();
+})();
+// made by make_wz_index.py: which questions fit a choice of parts / surahs (see there)
+const WZ_IDX={"farq":[[2,1,3,3],[2,1,3,4],[2,1,5,6],[2,1,7,8],[2,1,7,9],[2,1,10,11],[2,1,13,13],[2,1,14,13],[2,1,15,14],[2,1,16,14],[2,1,17,15],[2,1,20,16],[2,1,22,17],[2,1,29,20],[2,1,52,27],[2,1,62,28],[2,2,3,3],[2,2,3,4],[2,2,4,5],[2,2,6,8],[2,2,8,9],[2,2,9,10],[2,2,20,16],[2,2,22,17],[2,2,24,18],[2,2,29,21],[2,2,30,21],[2,2,31,21],[2,2,57,27],[2,2,65,28],[2,3,4,5],[2,3,8,9],[2,3,9,10],[2,3,14,13],[2,3,28,20],[3,3,2,1],[3,3,2,2],[3,3,2,3],[3,3,4,5],[3,3,4,6],[3,3,5,6],[3,3,5,7],[3,3,8,10],[3,3,19,16],[3,3,43,25],[3,4,2,2],[3,4,2,3],[3,4,4,5],[3,4,4,6],[3,4,5,6],[3,4,5,7],[3,4,8,9],[3,4,10,11],[3,4,21,17],[3,4,29,21],[3,4,57,27],[3,4,62,28],[4,4,7,9],[4,4,9,10],[4,4,9,11],[4,4,17,15],[4,4,39,23],[4,4,64,28],[4,5,2,1],[4,5,2,2],[4,5,2,3],[4,5,3,3],[4,5,3,4],[4,5,5,7],[4,5,6,7],[4,5,16,14],[4,5,24,18],[4,5,33,22],[4,5,39,23],[4,5,47,26],[4,5,57,27],[4,5,60,28],[4,6,3,4],[4,6,31,21],[4,6,42,25],[4,6,57,27],[5,6,2,1],[5,6,2,3],[5,6,3,3],[5,6,3,4],[5,6,4,5],[5,6,4,6],[5,6,16,14],[5,6,22,17],[5,6,29,20],[5,6,39,24],[5,6,48,26],[5,6,57,27],[5,6,61,28],[5,7,2,2],[5,7,3,4],[5,7,4,5],[5,7,9,10],[5,7,9,11],[5,7,14,13],[5,7,16,14],[5,7,31,21],[6,7,3,3],[6,7,4,5],[6,7,7,9],[6,7,10,11],[6,7,11,12],[6,7,14,13],[6,7,18,15],[6,7,24,18],[6,7,29,20],[6,7,29,21],[6,7,32,21],[6,7,35,22],[6,7,36,23],[6,7,38,23],[6,7,39,24],[6,7,40,24],[6,7,50,26],[6,8,5,6],[6,8,7,8],[6,8,7,9],[6,8,10,11],[6,8,11,12],[6,8,12,13],[6,8,16,14],[6,8,17,15],[6,8,30,21],[6,8,39,23],[6,8,46,26],[7,8,3,4],[7,8,5,6],[7,8,6,7],[7,8,6,8],[7,8,10,11],[7,8,11,12],[7,8,16,14],[7,8,23,18],[7,8,25,19],[7,8,26,19],[7,8,27,19],[7,8,27,20],[7,9,2,1],[7,9,10,11],[7,9,14,13],[7,9,16,14],[7,9,18,15],[7,9,26,19],[7,9,30,21],[7,9,39,23],[7,9,40,24],[7,9,41,24],[8,9,22,17],[8,9,59,28],[8,10,2,2],[8,10,3,3],[8,10,5,7],[8,10,9,10],[8,10,16,14],[8,10,33,21],[8,10,34,22],[9,10,2,2],[9,10,2,3],[9,10,3,4],[9,10,4,4],[9,10,4,5],[9,10,8,9],[9,10,8,10],[9,10,49,26],[9,10,60,28],[9,10,61,28],[9,11,13,13],[9,11,58,28],[10,11,2,1],[10,11,2,2],[10,11,6,7],[10,11,6,8],[10,11,7,8],[10,11,7,9],[10,11,8,10],[10,11,11,12],[10,11,13,13],[10,11,22,17],[10,11,23,18],[10,11,24,18],[10,11,27,20],[10,11,28,20],[10,11,30,21],[10,11,31,21],[10,11,32,21],[10,11,34,22],[10,11,39,24],[10,11,40,24],[11,12,6,8],[11,12,7,8],[11,12,9,10],[11,12,12,13],[11,12,13,13],[11,12,14,13],[11,12,15,14],[11,12,16,14],[11,12,23,18],[11,12,26,19],[11,12,29,20],[11,12,29,21],[11,12,51,26],[11,12,57,27],[12,12,10,11],[12,12,28,20],[12,12,53,27],[12,13,3,3],[12,13,6,7],[12,13,10,11],[13,13,2,1],[13,13,2,2],[13,13,3,3],[13,13,5,6],[13,13,8,10],[13,13,14,13],[13,13,16,14],[13,13,17,15],[13,13,29,21],[13,13,31,21],[13,13,39,24],[13,13,40,24],[13,13,42,25],[14,13,2,1],[14,13,3,3],[14,13,4,5],[14,13,5,6],[14,13,9,10],[14,13,10,11],[14,13,16,14],[14,13,40,24],[15,14,7,8],[15,14,12,12],[15,14,17,15],[15,14,38,23],[15,14,46,26],[15,14,50,26],[16,14,2,2],[16,14,3,4],[16,14,6,7],[16,14,6,8],[16,14,10,11],[16,14,11,11],[16,14,13,13],[16,14,14,13],[16,14,21,17],[16,14,22,17],[16,14,30,21],[16,14,35,22],[16,14,36,23],[16,14,39,23],[16,14,40,24],[16,14,42,25],[16,14,43,25],[16,14,45,25],[16,14,47,26],[17,15,6,8],[17,15,7,8],[17,15,13,13],[17,15,18,15],[17,15,27,20],[17,15,32,21],[17,15,34,22],[17,15,35,22],[17,15,39,23],[18,15,2,1],[18,15,6,7],[18,15,6,8],[18,15,7,8],[18,15,10,11],[18,15,17,15],[18,15,19,16],[18,15,21,17],[18,15,22,17],[18,15,28,20],[18,15,32,21],[18,15,41,25],[18,15,72,29],[18,16,19,16],[18,16,21,17],[19,16,3,3],[19,16,4,5],[19,16,25,19],[19,16,36,23],[19,16,43,25],[19,16,50,26],[20,16,5,6],[20,16,7,9],[20,16,10,11],[20,16,15,14],[20,16,21,17],[20,16,22,17],[20,16,23,18],[20,16,26,19],[20,16,28,20],[20,16,34,22],[20,16,36,23],[20,16,42,25],[20,16,43,25],[21,17,6,7],[21,17,12,13],[21,17,16,14],[21,17,29,20],[21,17,29,21],[21,17,38,23],[21,17,41,24],[21,17,44,25],[21,17,72,29],[22,17,2,1],[22,17,5,6],[22,17,8,10],[22,17,13,13],[22,17,16,14],[22,17,20,16],[22,17,21,17],[22,17,32,21],[22,17,34,22],[22,17,39,23],[22,17,40,24],[22,17,47,26],[22,17,50,26],[23,18,6,7],[23,18,7,8],[23,18,7,9],[23,18,8,9],[23,18,11,12],[23,18,16,14],[23,18,21,17],[23,18,25,19],[23,18,27,19],[23,18,28,20],[23,18,34,22],[23,18,41,24],[23,18,45,25],[23,18,56,27],[24,18,4,5],[24,18,8,10],[24,18,13,13],[24,18,21,17],[24,18,30,21],[24,18,33,22],[24,18,48,26],[24,18,64,28],[25,18,13,13],[25,18,19,16],[25,19,6,8],[25,19,10,11],[25,19,21,17],[25,19,22,17],[25,19,32,21],[26,19,7,8],[26,19,7,9],[26,19,15,14],[26,19,20,16],[26,19,21,17],[26,19,28,20],[26,19,43,25],[27,19,7,8],[27,19,23,18],[27,19,28,20],[27,19,29,20],[27,19,61,28],[27,20,7,8],[27,20,10,11],[27,20,14,13],[27,20,16,14],[27,20,23,18],[27,20,25,19],[27,20,28,20],[27,20,29,20],[27,20,30,21],[28,20,6,8],[28,20,10,11],[28,20,19,16],[28,20,20,16],[28,20,23,18],[28,20,27,20],[28,20,29,21],[28,20,30,21],[28,20,31,21],[28,20,32,21],[28,20,34,22],[28,20,36,22],[28,20,39,24],[28,20,40,24],[28,20,42,25],[29,20,7,8],[29,20,10,11],[29,20,11,12],[29,20,16,14],[29,20,27,20],[29,20,30,21],[29,20,35,22],[29,20,36,23],[29,20,42,25],[29,20,45,25],[29,20,46,26],[29,21,3,4],[29,21,13,13],[29,21,16,14],[29,21,30,21],[29,21,39,24],[29,21,42,25],[29,21,64,28],[30,21,10,11],[30,21,16,14],[30,21,17,15],[30,21,27,20],[30,21,39,23],[30,21,40,24],[30,21,42,25],[30,21,45,25],[31,21,16,14],[31,21,22,17],[31,21,24,18],[31,21,27,19],[31,21,27,20],[31,21,29,20],[31,21,29,21],[31,21,35,22],[31,21,39,24],[31,21,46,26],[32,21,16,14],[32,21,20,16],[32,21,28,20],[32,21,34,22],[33,21,60,28],[33,22,4,6],[33,22,49,26],[34,22,6,7],[34,22,10,11],[34,22,22,17],[34,22,24,18],[34,22,29,21],[34,22,35,22],[34,22,46,26],[34,22,57,27],[35,22,2,1],[35,22,3,4],[35,22,4,6],[35,22,5,6],[35,22,6,8],[35,22,13,13],[35,22,14,13],[35,22,16,14],[35,22,17,15],[35,22,22,17],[35,22,24,18],[35,22,25,19],[35,22,30,21],[35,22,31,21],[35,22,39,23],[35,22,39,24],[35,22,40,24],[35,22,46,26],[36,23,19,16],[37,23,21,17],[37,23,26,19],[37,23,28,20],[38,23,2,1],[38,23,15,14],[38,23,21,17],[38,23,22,17],[38,23,37,23],[38,23,43,25],[38,23,50,26],[38,23,52,27],[38,23,54,27],[39,23,14,13],[39,23,16,14],[39,23,30,21],[39,23,31,21],[39,23,35,22],[39,23,42,25],[39,24,6,7],[39,24,6,8],[39,24,10,11],[39,24,11,12],[39,24,27,20],[39,24,28,20],[39,24,29,20],[39,24,30,21],[39,24,34,22],[39,24,42,25],[39,24,43,25],[39,24,45,25],[39,24,46,26],[40,24,4,5],[40,24,6,7],[40,24,7,9],[40,24,10,11],[40,24,12,13],[40,24,13,13],[40,24,14,13],[40,24,16,14],[40,24,28,20],[40,24,30,21],[40,24,35,22],[40,24,42,25],[40,24,46,26],[40,24,47,26],[41,24,2,2],[41,24,18,16],[41,24,27,19],[41,24,29,20],[41,24,34,22],[41,24,39,23],[41,24,40,24],[41,24,45,25],[41,24,46,26],[41,24,54,27],[41,25,10,11],[41,25,11,12],[41,25,17,15],[41,25,35,22],[41,25,46,26],[42,25,5,6],[42,25,6,7],[42,25,10,11],[42,25,29,21],[42,25,30,21],[42,25,39,23],[42,25,39,24],[42,25,40,24],[42,25,53,27],[42,25,57,27],[43,25,6,7],[43,25,7,8],[43,25,12,12],[43,25,15,14],[43,25,19,16],[43,25,23,18],[43,25,31,21],[43,25,34,22],[43,25,47,26],[44,25,37,23],[44,25,46,26],[44,25,52,27],[45,25,2,2],[45,25,6,7],[45,25,10,11],[45,25,16,14],[45,25,22,17],[45,25,23,18],[45,25,30,21],[45,25,31,21],[45,25,35,22],[45,25,43,25],[46,26,11,12],[46,26,17,15],[46,26,19,16],[46,26,27,19],[46,26,36,23],[46,26,41,24],[46,26,45,25],[46,26,67,29],[46,26,71,29],[46,26,79,30],[47,26,3,4],[47,26,6,7],[47,26,11,12],[47,26,12,13],[47,26,57,27],[47,26,64,28],[48,26,3,4],[48,26,5,6],[48,26,9,10],[48,26,33,22],[48,26,59,28],[48,26,65,28],[48,26,66,28],[49,26,2,2],[49,26,5,6],[49,26,9,10],[49,26,47,26],[49,26,58,28],[49,26,64,28],[50,26,19,16],[51,26,15,14],[51,27,28,20],[52,27,36,23],[53,27,51,27],[54,27,70,29],[55,27,52,27],[56,27,78,30],[57,27,4,4],[57,27,9,10],[57,27,9,11],[57,27,10,11],[57,27,22,17],[57,27,30,21],[57,27,39,23],[58,28,3,3],[58,28,3,4],[58,28,60,28],[58,28,62,28],[58,28,65,28],[59,28,33,21],[59,28,57,27],[59,28,98,30],[60,28,58,28],[61,28,2,1],[61,28,3,3],[61,28,46,26],[61,28,66,28],[62,28,2,1],[62,28,61,28],[62,28,64,28],[63,28,9,10],[63,28,58,28],[64,28,5,7],[64,28,8,9],[64,28,9,10],[64,28,32,21],[64,28,39,23],[64,28,40,24],[64,28,65,28],[64,28,67,29],[65,28,2,2],[65,28,58,28],[66,28,21,17],[67,29,16,14],[67,29,23,18],[68,29,37,23],[68,29,70,29],[68,29,76,29],[70,29,23,18],[70,29,32,21],[70,29,50,26],[71,29,14,13],[72,29,98,30],[73,29,57,27],[73,29,62,28],[76,29,81,30],[84,30,41,24],[84,30,95,30],[95,30,103,30],[98,30,58,28],[98,30,85,30]],"awwal":[[1,1,1],[2,1,1],[2,2,2],[2,3,3],[3,3,3],[3,4,4],[4,4,4],[4,5,5],[4,6,6],[5,6,6],[5,7,7],[6,7,7],[6,8,8],[7,8,8],[7,9,9],[8,9,9],[8,10,10],[9,10,10],[9,11,11],[10,11,11],[11,11,11],[11,12,12],[12,12,12],[12,13,13],[13,13,13],[14,13,13],[15,14,14],[16,14,14],[17,15,15],[18,15,15],[18,16,16],[19,16,16],[20,16,16],[21,17,17],[22,17,17],[23,18,18],[24,18,18],[25,18,18],[25,19,19],[26,19,19],[27,19,19],[27,20,20],[28,20,20],[29,20,20],[29,21,21],[30,21,21],[31,21,21],[32,21,21],[33,21,21],[33,22,22],[34,22,22],[35,22,22],[36,22,22],[36,23,23],[37,23,23],[38,23,23],[39,23,23],[39,24,24],[40,24,24],[41,24,24],[41,25,25],[42,25,25],[43,25,25],[44,25,25],[45,25,25],[46,26,26],[47,26,26],[48,26,26],[49,26,26],[50,26,26],[51,26,26],[51,27,27],[52,27,27],[53,27,27],[54,27,27],[55,27,27],[56,27,27],[57,27,27],[58,28,28],[59,28,28],[60,28,28],[61,28,28],[62,28,28],[63,28,28],[64,28,28],[65,28,28],[66,28,28],[67,29,29],[68,29,29],[69,29,29],[70,29,29],[71,29,29],[72,29,29],[73,29,29],[74,29,29],[75,29,29],[76,29,29],[77,29,29],[78,30,30],[80,30,30],[81,30,30],[82,30,30],[83,30,30],[84,30,30],[85,30,30],[86,30,30],[89,30,30],[90,30,30],[91,30,30],[92,30,30],[95,30,30],[97,30,30],[98,30,30],[99,30,30],[100,30,30],[103,30,30],[105,30,30],[110,30,30],[111,30,30]],"qabl":[[2,1,1],[2,2,2],[2,3,3],[3,3,3],[3,4,4],[4,4,4],[4,5,5],[4,6,6],[5,6,6],[5,7,7],[6,7,7],[6,8,8],[7,8,8],[7,9,9],[8,9,9],[8,10,10],[9,10,10],[9,11,11],[10,11,11],[11,12,12],[12,12,12],[12,13,13],[13,13,13],[14,13,13],[15,14,14],[16,14,14],[17,15,15],[18,15,15],[18,16,16],[19,16,16],[20,16,16],[21,17,17],[22,17,17],[23,18,18],[24,18,18],[25,18,18],[25,19,19],[26,19,19],[27,19,19],[27,20,20],[28,20,20],[29,20,20],[29,21,21],[30,21,21],[31,21,21],[32,21,21],[33,21,21],[33,22,22],[34,22,22],[35,22,22],[36,22,22],[36,23,23],[37,23,23],[38,23,23],[39,23,23],[39,24,24],[40,24,24],[41,24,24],[41,25,25],[42,25,25],[43,25,25],[44,25,25],[45,25,25],[46,26,26],[47,26,26],[48,26,26],[49,26,26],[50,26,26],[51,26,26],[51,27,27],[52,27,27],[53,27,27],[54,27,27],[55,27,27],[56,27,27],[57,27,27],[58,28,28],[59,28,28],[60,28,28],[61,28,28],[63,28,28],[64,28,28],[65,28,28],[67,29,29],[68,29,29],[69,29,29],[70,29,29],[71,29,29],[72,29,29],[73,29,29],[74,29,29],[75,29,29],[76,29,29],[77,29,29],[78,30,30],[79,30,30],[80,30,30],[81,30,30],[82,30,30],[83,30,30],[84,30,30],[85,30,30],[86,30,30],[87,30,30],[88,30,30],[89,30,30],[90,30,30],[92,30,30],[93,30,30],[94,30,30],[95,30,30],[97,30,30],[100,30,30],[105,30,30],[111,30,30],[112,30,30]],"rattib":[[1,1,1],[2,1,1],[2,2,2],[2,3,3],[3,3,3],[3,4,4],[4,4,4],[4,5,5],[4,6,6],[5,6,6],[5,7,7],[6,7,7],[6,8,8],[7,8,8],[7,9,9],[8,9,9],[8,10,10],[9,10,10],[9,11,11],[10,11,11],[11,11,11],[11,12,12],[12,12,12],[12,13,13],[13,13,13],[14,13,13],[15,14,14],[16,14,14],[17,15,15],[18,15,15],[18,16,16],[19,16,16],[20,16,16],[21,17,17],[22,17,17],[23,18,18],[24,18,18],[25,18,18],[25,19,19],[26,19,19],[27,19,19],[27,20,20],[28,20,20],[29,20,20],[29,21,21],[30,21,21],[31,21,21],[32,21,21],[33,21,21],[33,22,22],[34,22,22],[35,22,22],[36,22,22],[36,23,23],[37,23,23],[38,23,23],[39,23,23],[39,24,24],[40,24,24],[41,24,24],[42,25,25],[43,25,25],[44,25,25],[45,25,25],[46,26,26],[47,26,26],[48,26,26],[49,26,26],[50,26,26],[51,26,26],[51,27,27],[52,27,27],[53,27,27],[54,27,27],[55,27,27],[56,27,27],[57,27,27],[58,28,28],[59,28,28],[61,28,28],[62,28,28],[63,28,28],[64,28,28],[66,28,28],[67,29,29],[68,29,29],[69,29,29],[70,29,29],[71,29,29],[72,29,29],[73,29,29],[74,29,29],[75,29,29],[76,29,29],[77,29,29],[78,30,30],[79,30,30],[80,30,30],[81,30,30],[82,30,30],[83,30,30],[84,30,30],[85,30,30],[86,30,30],[87,30,30],[88,30,30],[89,30,30],[90,30,30],[91,30,30],[92,30,30],[93,30,30],[94,30,30],[95,30,30],[96,30,30],[97,30,30],[98,30,30],[99,30,30],[100,30,30],[101,30,30],[102,30,30],[104,30,30],[105,30,30],[107,30,30],[111,30,30],[113,30,30],[114,30,30]]};
 
 // ---------- «للمعلّمين»: make an assignment and read the results, on this page like «تدرّب» ----------
 (() => {
