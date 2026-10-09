@@ -1,4 +1,4 @@
-# اختبارات قرآنية
+# أين ورد؟
 
 اختبارات يومية لحافظي القرآن الكريم، في ثلاثة أقسام، مع التدريب على الأجزاء المحفوظة:
 
@@ -10,6 +10,6 @@
 - `privacy.html` — سياسة الخصوصية (عربي + English)، مطلوبة لمتجر Google Play
 - `og-image.png` — صورة المعاينة عند مشاركة الرابط
 
-الاختبار يتغير تلقائيًا كل يوم عند منتصف الليل بتوقيت القاهرة لكل اللاعبين. الاختبار رقم ١ هو يوم 2 أكتوبر 2026.
+الاختبار يتغير تلقائيًا كل يوم عند منتصف الليل بتوقيت القاهرة لكل اللاعبين. الاختبار رقم ١ هو يوم 9 أكتوبر 2026.
 
 Quran text: Tanzil Quran Text (Uthmani, Version 1.1), Copyright (C) 2007-2026 Tanzil Project, CC BY 3.0, used verbatim — https://tanzil.net (the full Tanzil copyright notice is kept inside every page). Audio: Mahmoud Khalil Al-Husary (murattal) via the Islamic Network CDN (cdn.islamic.network). Juz/hizb/rub: quran-meta (MIT).

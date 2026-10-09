@@ -5,15 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="ترتيب السور: ما السورة التي قبلها والتي بعدها في المصحف؟ اختبار جديد كل يوم.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://quranic-verses.github.io/quranic-tests/tartib.html">
+<meta property="og:url" content="https://quranic-verses.github.io/aynawarad/tartib.html">
 <meta property="og:title" content="ترتيب السور · أين ورد؟">
 <meta property="og:description" content="ترتيب السور: ما السورة التي قبلها والتي بعدها في المصحف؟ اختبار جديد كل يوم.">
-<meta property="og:image" content="https://quranic-verses.github.io/quranic-tests/og-image.png?v=8">
+<meta property="og:image" content="https://quranic-verses.github.io/aynawarad/og-image.png?v=8">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="ar_AR">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://quranic-verses.github.io/quranic-tests/og-image.png?v=8">
+<meta name="twitter:image" content="https://quranic-verses.github.io/aynawarad/og-image.png?v=8">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -954,7 +954,7 @@ const MAX_WRONG = C.tries || 0;   // آخر الآية / رتّب الآيات: 
 const TRY = C.kind !== 'mcq';     // the quizzes played with tries (type a word / tap the next verse)
 const WANT_TRAIN = location.hash === '#train';
 const WANT_PICK = location.hash === '#pick';
-const SITE_URL = 'https://quranic-verses.github.io/quranic-tests/';
+const SITE_URL = 'https://quranic-verses.github.io/aynawarad/';
 const START = Date.UTC(2026, 9, 9); // test #1 = 9 Oct 2026, Cairo date (restarted; before: 6 Oct)
 const FIX = {14:'إبراهيم',34:'سبأ',78:'النبأ',76:'الإنسان',82:'الانفطار',84:'الانشقاق'};
 const SURAH = {}; QD.s.forEach(([n, name]) => SURAH[n] = FIX[n] || name);
@@ -2044,7 +2044,7 @@ const ACCT = (() => {
 const API_URL = 'https://script.google.com/macros/s/AKfycbxwgKCF9ivdeeQFqvimrKBh4ZayfQz9wFHv1175LskGSfLMQkxc0vlCQQTSIwOVt78/exec';
 const CLIENT_ID = '1085731699993-jcbe56816bik30fo2belalcr714j6nbg.apps.googleusercontent.com';
 const LIVE = location.hostname === 'quranic-verses.github.io';
-const SITE = 'https://quranic-verses.github.io/quranic-tests/';
+const SITE = 'https://quranic-verses.github.io/aynawarad/';
 const K = 'qt-acct', KM = 'qt-members', KC = 'qt-mine';
 const q = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 let me = store.get(K, null);                 // { token, exp, name, email }
@@ -2804,7 +2804,7 @@ $('pickX').addEventListener('click', () => { if (S && S.practice) return; if (IS
 
 // ---------- «للمعلّمين»: make an assignment and read the results, on this page like «تدرّب» ----------
 (() => {
-const SITE = 'https://quranic-verses.github.io/quranic-tests/';
+const SITE = 'https://quranic-verses.github.io/aynawarad/';
 const FILE = { surah: '', farq: 'farq.html', akhir: 'akhir.html', awwal: 'awwal.html', wasat: 'wasat.html', qabl: 'qabl.html', rattib: 'rattib.html' };
 const NAME = { surah: 'أين ورد؟', farq: 'ميّز بينهما', akhir: 'آخر الآية', awwal: 'أول الآية', wasat: 'وسط الآية', qabl: 'ما قبلها؟ ما بعدها؟', rattib: 'رتّب الآيات' };
 const AR = '٠١٢٣٤٥٦٧٨٩';
