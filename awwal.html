@@ -339,6 +339,7 @@ details p{margin:.4em 0}
 .chips.sur{grid-template-columns:repeat(auto-fill,minmax(84px,1fr));max-height:220px;overflow-y:auto}
 .plab2{margin:6px 0 4px;font-size:.85rem;font-weight:700;color:var(--muted)} .plab2 small{font-weight:400}
 /* «تدرّب»: one question per screen (flow.js) */
+html.boot .wrap, html.boot #exNext, html.boot .hwov{visibility:hidden}
 #pick.wz{gap:12px}
 #pick.wz #pickTitle{font-size:1.5rem}
 #pick.wz > .pstep, #pick.wz > .pick-foot, #pick.wz #pickGo{display:none!important}
@@ -487,6 +488,9 @@ if ('serviceWorker' in navigator && location.protocol === 'https:' && location.h
 </script>
 </head>
 <body>
+<script>/* no flash of the wrong screen: the page shows once its code has chosen the screen (at most 1.5 s hidden) */
+(function(){ var h = document.documentElement, show = function(){ h.classList.remove('boot'); }; h.classList.add('boot');
+  document.addEventListener('DOMContentLoaded', function(){ requestAnimationFrame(function(){ requestAnimationFrame(show); }); }); setTimeout(show, 1500); })();</script>
 <div class="wrap" dir="rtl" lang="ar">
   <header>
     <h1>أين ورد؟<small class="tagline">ثبّت حفظك للقرآن كل يوم</small></h1>
