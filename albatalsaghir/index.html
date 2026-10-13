@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مسابقة البطل الصغير</title>
+<meta name="description" content="مسابقة للأطفال في السيرة والأنبياء والصحابة وجزء عمّ، للبيت أو الفصل أو حلقة التحفيظ، وفي نهايتها شهادة تقدير لكل بطل.">
+<meta name="theme-color" content="#E6F4EF">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="البطل الصغير">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+<!-- Sharing preview (WhatsApp, Facebook, Telegram, X). The image link must be the full site address. -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ar_AR">
+<meta property="og:site_name" content="البطل الصغير">
+<meta property="og:title" content="مسابقة البطل الصغير">
+<meta property="og:description" content="مسابقة للأطفال في السيرة والأنبياء والصحابة وجزء عمّ، للبيت أو الفصل أو حلقة التحفيظ، وفي نهايتها شهادة تقدير لكل بطل.">
+<meta property="og:url" content="https://quranic-verses.github.io/aynawarad/albatalsaghir/">
+<!-- Default share: the wide banner (its center square is just the logo and name, so WhatsApp's square crop still reads well).
+     Second image: a square logo + name, for apps that prefer square. Raise ?v= after changing either image so apps refresh their cached preview. -->
+<meta property="og:image" content="https://quranic-verses.github.io/aynawarad/albatalsaghir/og-banner.jpg?v=2">
+<meta property="og:image:secure_url" content="https://quranic-verses.github.io/aynawarad/albatalsaghir/og-banner.jpg?v=2">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="البطل الصغير">
+<meta property="og:image" content="https://quranic-verses.github.io/aynawarad/albatalsaghir/og-square.jpg?v=2">
+<meta property="og:image:secure_url" content="https://quranic-verses.github.io/aynawarad/albatalsaghir/og-square.jpg?v=2">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="600">
+<meta property="og:image:height" content="600">
+<meta property="og:image:alt" content="البطل الصغير">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="مسابقة البطل الصغير">
+<meta name="twitter:description" content="مسابقة للأطفال في السيرة والأنبياء والصحابة وجزء عمّ، للبيت أو الفصل أو حلقة التحفيظ، وفي نهايتها شهادة تقدير لكل بطل.">
+<meta name="twitter:image" content="https://quranic-verses.github.io/aynawarad/albatalsaghir/og-banner.jpg?v=2">
+<link rel="canonical" href="https://quranic-verses.github.io/aynawarad/albatalsaghir/">
+
+<link rel="preload" href="fonts/Lalezar-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/BalooBhaijaan2.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="confetti" aria-hidden="true"></canvas>
+<div class="app">
+  <div class="topbar">
+    <button class="brand" id="homeBtn" type="button" title="الصفحة الرئيسية">البطل الصغير</button>
+    <div class="top-actions">
+      <button class="icon-btn hl" id="installBtn" type="button" hidden>ثبّت التطبيق</button>
+      <button class="icon-btn" id="soundBtn" type="button" aria-pressed="true">الصوت: يعمل</button>
+    </div>
+  </div>
+  <main id="screen"></main>
+</div>
+<script src="config.js"></script>
+<script src="questions.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

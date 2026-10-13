@@ -1,0 +1,24 @@
+{
+  "name": "مسابقة البطل الصغير",
+  "short_name": "البطل الصغير",
+  "description": "مسابقة للأطفال في السيرة والأنبياء والصحابة وجزء عمّ، للبيت أو الفصل أو حلقة التحفيظ، وفي نهايتها شهادة تقدير لكل بطل.",
+  "lang": "ar",
+  "dir": "rtl",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#E6F4EF",
+  "theme_color": "#E6F4EF",
+  "categories": ["education", "kids", "games"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "screenshots": [
+    { "src": "icons/screenshot-mobile.png", "sizes": "780x1688", "type": "image/png", "form_factor": "narrow", "label": "شاشة البداية" },
+    { "src": "icons/screenshot-wide.png", "sizes": "1280x800", "type": "image/png", "form_factor": "wide", "label": "شهادة التقدير" }
+  ]
+}
