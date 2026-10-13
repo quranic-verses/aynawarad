@@ -1,6 +1,6 @@
 /* Layout: one centered column of bold-outlined "game cards" on a sky-mint field patterned with faint 8-point stars; one screen at a time. Single bright look by choice. */
-@font-face{font-family:"Lalezar";src:url("fonts/Lalezar-Regular.woff2") format("woff2");font-weight:400;font-display:swap}
-@font-face{font-family:"Baloo Bhaijaan 2";src:url("fonts/BalooBhaijaan2.woff2") format("woff2");font-weight:400 800;font-display:swap}
+@font-face{font-family:"Lalezar";src:url("fonts/Lalezar-Regular.woff2") format("woff2");font-weight:400;font-display:block}
+@font-face{font-family:"Baloo Bhaijaan 2";src:url("fonts/BalooBhaijaan2.woff2") format("woff2");font-weight:400 800;font-display:block}
 @font-face{font-family:"Amiri";src:url("fonts/Amiri-Bold.woff2") format("woff2");font-weight:700;font-display:swap}
 
 :root{

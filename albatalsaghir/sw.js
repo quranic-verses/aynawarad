@@ -1,5 +1,5 @@
 /* Offline support. Change VERSION whenever you upload new files so phones pick them up. */
-const VERSION = 'albatal-v9';
+const VERSION = 'albatal-v10';
 const FILES = [
   './', 'index.html', 'about.html', 'privacy.html',
   'style.css', 'app.js', 'config.js', 'questions.js', 'manifest.webmanifest',

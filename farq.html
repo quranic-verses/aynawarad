@@ -435,7 +435,10 @@ if ('serviceWorker' in navigator && location.protocol === 'https:' && location.h
 <body>
 <script>/* no flash of the wrong screen: the page shows once its code has chosen the screen (on a slow connection it waits for the page's data; at most 15 s) */
 (function(){ var h = document.documentElement, show = function(){ h.classList.remove('boot'); }; h.classList.add('boot');
-  document.addEventListener('DOMContentLoaded', function(){ requestAnimationFrame(function(){ requestAnimationFrame(show); }); }); setTimeout(show, 15000); })();</script>
+  document.addEventListener('DOMContentLoaded', function(){
+    // and once the site's fonts are in (at most 2 s more), so the text doesn't change its look in front of the player
+    var go = function(){ requestAnimationFrame(function(){ requestAnimationFrame(show); }); };
+    if (document.fonts && document.fonts.ready) Promise.race([document.fonts.ready, new Promise(function(r){ setTimeout(r, 2000); })]).then(go, go); else go(); }); setTimeout(show, 15000); })();</script>
 <div class="wrap" dir="rtl" lang="ar">
   <header>
     <h1>أين ورد؟<small class="tagline">ثبّت حفظك للقرآن كل يوم</small></h1>
