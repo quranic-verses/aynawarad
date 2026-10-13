@@ -1,8 +1,8 @@
 // أين ورد؟ — offline support.
 // Pages: always checked with GitHub first (so updates show up right away), cached copy when offline.
 // Fonts: cached after the first visit. Recitation audio is never cached.
-const CACHE = 'aynawarad-v113';
-const CORE = ['./', './index.html', './farq.html', './akhir.html', './awwal.html', './wasat.html', './qabl.html', './rattib.html', './lam.html', './makki.html', './fawatih.html', './tartib.html', './asmaa.html', './support.html', './about.html', './guide.html', './privacy.html', './teacher.html',
+const CACHE = 'aynawarad-v114';
+const CORE = ['./', './index.html', './farq.html', './akhir.html', './awwal.html', './wasat.html', './qabl.html', './rattib.html', './lam.html', './makki.html', './fawatih.html', './tartib.html', './asmaa.html', './support.html', './about.html', './guide.html', './privacy.html', './teacher.html', './albatal.html',
   './data/index.js', './data/farq.js', './data/akhir.js', './data/awwal.js', './data/wasat.js', './data/qabl.js', './data/rattib.js', './data/lam.js', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
