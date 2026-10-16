@@ -1022,7 +1022,9 @@ const toks = k => (QD.v[k] || '').split(' ');
 // Forgiving spelling (same as the build script): Uthmani and everyday spelling give the same key,
 // e.g. «ٱلصَّلَوٰةَ» = «الصلاة», «ٱلَّيْلِ» = «الليل», «إِبْرَٰهِـۧمَ» = «إبراهيم».
 function loose(w){
-  w = String(w).replace(/وٰ/g, 'ا').replace(/ىٰ/g, 'ى').replace(/ۧ/g, 'ي');
+  w = String(w).replace(/وٰ/g, 'ا')
+    // ىٰ in the middle of a word (followed by a letter) is a long alif: «هُدَىٰهُمۡ» = «هداهم»; at the end of a word it stays ى: «مُوسَىٰ» = «موسى»
+    .replace(/ىٰ(?=[\u064B-\u065F\u06D6-\u06ED]*[ء-ي])/g, 'ا').replace(/ىٰ/g, 'ى').replace(/ۧ/g, 'ي');
   w = w.replace(/[ً-ٰٟۖ-ۭـࣰ-ࣲ]/g, '');
   w = w.replace(/[اأإآٱء]/g, '');
   w = w.replace(/ئ/g, 'ي').replace(/ؤ/g, 'و').replace(/ى/g, 'ي');
